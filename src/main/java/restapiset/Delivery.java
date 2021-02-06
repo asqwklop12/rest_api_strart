@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @Setter @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = "id")
 public class Delivery {
     private int id;
     private String item;

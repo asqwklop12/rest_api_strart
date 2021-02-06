@@ -34,7 +34,7 @@ class DeliveryTest {
                 .user("klom")
                 .build();
         delivery.setId(10);
-        Mockito.when(deliveryRepository.save(any(Delivery.class))).thenReturn(delivery);
+        Mockito.when(deliveryRepository.save(delivery)).thenReturn(delivery);
         mockMvc.perform(post("/api/delivery/")
                     .accept(MediaTypes.HAL_JSON_VALUE)
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
