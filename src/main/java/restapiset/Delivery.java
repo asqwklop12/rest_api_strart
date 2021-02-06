@@ -13,5 +13,6 @@ public class Delivery {
     private String item;
     private String user;
     private LocalDateTime deliveryTime;
+    private LocalDateTime deliveryEndTime;
     private DeliveryStatus status;
 }
