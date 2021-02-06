@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.net.URI;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Controller
 @RequestMapping(value = "/api/delivery", produces = MediaTypes.HAL_JSON_VALUE)
