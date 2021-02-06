@@ -1,5 +1,6 @@
 package restapiset;
 
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,7 +12,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Controller
-@RequestMapping("/api/delivery")
+@RequestMapping(value = "/api/delivery", produces = MediaTypes.HAL_JSON_VALUE)
 public class DeliveryController {
 
     @PostMapping
