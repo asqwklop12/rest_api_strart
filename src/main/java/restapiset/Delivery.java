@@ -16,4 +16,5 @@ public class Delivery {
     private LocalDateTime deliveryTime;
     private LocalDateTime deliveryEndTime;
     private DeliveryStatus status;
+    private Integer deliveryCost;
 }
