@@ -48,4 +48,25 @@ class DeliveryTest {
 
         ;
     }
+
+    @Test
+    void create_Delivery_wrong() throws Exception {
+        Delivery delivery = Delivery.builder()
+                .id(10)
+                .item("book")
+                .user("klom")
+                .status(DeliveryStatus.MOVE)
+                .build();
+        mockMvc.perform(post("/api/delivery/")
+                    .accept(MediaTypes.HAL_JSON_VALUE)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .content(objectMapper.writeValueAsString(delivery))
+                )
+               .andDo(print())
+               .andExpect(status().isBadRequest())
+
+        ;
+    }
+
+
 }

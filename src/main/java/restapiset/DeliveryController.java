@@ -25,7 +25,7 @@ public class DeliveryController {
     }
 
     @PostMapping
-    public ResponseEntity createDelivery(@RequestBody DeliveryDto deliveryDto) {
+    public ResponseEntity<Delivery> createDelivery(@RequestBody DeliveryDto deliveryDto) {
         Delivery deliver = modelMapper.map(deliveryDto, Delivery.class);
         Delivery newDelivery = deliveryRepository.save(deliver);
         URI createUri = linkTo(DeliveryController.class).slash(newDelivery.getId()).toUri();
