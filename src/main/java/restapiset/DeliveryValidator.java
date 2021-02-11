@@ -9,6 +9,7 @@ public class DeliveryValidator {
   public void validate(DeliveryDto deliveryDto, Errors errors) {
     if(deliveryDto.getDeliveryTime().isAfter(deliveryDto.getDeliveryEndTime())) {
       errors.rejectValue("deliveryTime","wrong value");
+      errors.reject("delivery is wrong");
     }
   }
 }

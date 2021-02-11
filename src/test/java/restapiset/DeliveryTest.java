@@ -97,7 +97,11 @@ class DeliveryTest {
         .content(objectMapper.writeValueAsString(delivery))
     )
         .andDo(print())
-        .andExpect(status().isBadRequest());
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.[0].objectName").exists())
+        .andExpect(jsonPath("$.[0].field").exists())
+        .andExpect(jsonPath("$.[0].rejectedValue").exists())
+      ;
   }
 
 

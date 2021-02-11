@@ -30,13 +30,13 @@ public class DeliveryController {
     }
 
     @PostMapping
-    public ResponseEntity<Delivery> createDelivery(@RequestBody @Valid DeliveryDto deliveryDto, Errors errors) {
+    public ResponseEntity<?> createDelivery(@RequestBody @Valid DeliveryDto deliveryDto, Errors errors) {
         if (errors.hasErrors()) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(errors);
         }
         deliveryValidator.validate(deliveryDto,errors);
         if(errors.hasErrors()) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(errors);
         }
         Delivery deliver = modelMapper.map(deliveryDto, Delivery.class);
         Delivery newDelivery = deliveryRepository.save(deliver);
