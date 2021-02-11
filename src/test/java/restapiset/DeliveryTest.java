@@ -13,6 +13,8 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -35,6 +37,8 @@ class DeliveryTest {
         DeliveryDto delivery = DeliveryDto.builder()
                 .item("book")
                 .user("klom")
+                .deliveryTime(LocalDateTime.now())
+                .deliveryEndTime(LocalDateTime.now().plusDays(10))
                 .build();
         mockMvc.perform(post("/api/delivery/")
                     .accept(MediaTypes.HAL_JSON_VALUE)
@@ -55,6 +59,8 @@ class DeliveryTest {
                 .id(10)
                 .item("book")
                 .user("klom")
+                .deliveryTime(LocalDateTime.now())
+                .deliveryEndTime(LocalDateTime.now().plusDays(10))
                 .status(DeliveryStatus.MOVE)
                 .build();
         mockMvc.perform(post("/api/delivery/")
