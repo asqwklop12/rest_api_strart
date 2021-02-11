@@ -11,4 +11,7 @@ import java.time.LocalDateTime;
 public class DeliveryDto {
     private String item;
     private String user;
+    private LocalDateTime deliveryTime;
+    private LocalDateTime deliveryEndTime;
+    private Integer itemPrice;
 }
