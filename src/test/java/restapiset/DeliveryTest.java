@@ -73,6 +73,41 @@ class DeliveryTest {
 
         ;
     }
+    @Test
+    void badRequest_empty_entity() throws Exception {
+        DeliveryDto delivery = DeliveryDto.builder()
+                .build();
+        mockMvc.perform(post("/api/delivery/")
+                    .accept(MediaTypes.HAL_JSON_VALUE)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .content(objectMapper.writeValueAsString(delivery))
+                )
+               .andDo(print())
+               .andExpect(status().isBadRequest())
 
+        ;
+    }
+    @Test
+    void badRequest() throws Exception {
+        DeliveryDto delivery = DeliveryDto.builder()
+            .item("book")
+            .user("klom")
+            .deliveryTime(LocalDateTime.now())
+            .deliveryEndTime(LocalDateTime.now().plusDays(10))
+            .itemPrice(0)
+            .build();
+        mockMvc.perform(post("/api/delivery/")
+            .accept(MediaTypes.HAL_JSON_VALUE)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .content(objectMapper.writeValueAsString(delivery))
+        )
+            .andDo(print())
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.[0].field").exists())
+            .andExpect(jsonPath("$.[0].objectName").exists())
+            .andExpect(jsonPath("$.[0].code").exists())
+            .andExpect(jsonPath("$.[0].rejectedValue").exists())
+        ;
+    }
 
 }
