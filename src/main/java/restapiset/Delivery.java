@@ -25,5 +25,5 @@ public class Delivery {
     private LocalDateTime deliveryEndTime;
     private DeliveryStatus status = DeliveryStatus.READY;
     private Integer itemPrice;
-    private Integer deliveryCost;
+    private Integer deliveryCost = 5000;
 }
