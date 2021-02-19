@@ -44,7 +44,9 @@ class DeliveryTest {
         .andExpect(status().isCreated())
         .andExpect(jsonPath("id").value(Matchers.not(10)))
         .andExpect(jsonPath("status").value(DeliveryStatus.READY.name()))
-
+        .andExpect(jsonPath("_links.query-events").exists())
+        .andExpect(jsonPath("_links.update-events").exists())
+        .andExpect(jsonPath("_links.self").exists())
     ;
   }
 

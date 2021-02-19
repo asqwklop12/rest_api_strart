@@ -3,6 +3,7 @@ package restapiset;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
@@ -40,7 +41,10 @@ public class DeliveryController {
         }
         Delivery deliver = modelMapper.map(deliveryDto, Delivery.class);
         Delivery newDelivery = deliveryRepository.save(deliver);
-        URI createUri = linkTo(DeliveryController.class).slash(newDelivery.getId()).toUri();
-        return ResponseEntity.created(createUri).body(deliver);
+        WebMvcLinkBuilder selfRelationBuilder = linkTo(DeliveryController.class).slash(newDelivery.getId());
+        URI createUri = selfRelationBuilder.toUri();
+        DeliveryModel model = new DeliveryModel(deliver);
+
+        return ResponseEntity.created(createUri).body(model);
     }
 }
