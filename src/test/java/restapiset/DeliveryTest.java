@@ -38,6 +38,7 @@ class DeliveryTest {
     DeliveryDto delivery = DeliveryDto.builder()
         .item("book")
         .user("klom")
+        .itemPrice(1000)
         .deliveryTime(LocalDateTime.now())
         .deliveryEndTime(LocalDateTime.now().plusDays(10))
         .build();
