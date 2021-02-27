@@ -11,5 +11,6 @@ public class DeliveryModel extends EntityModel<Delivery> {
     add(linkTo(DeliveryController.class).withRel("query-events"));
     add(linkTo(DeliveryController.class).slash(delivery.getId()).withRel("update-events"));
     add(linkTo(DeliveryController.class).slash(delivery.getId()).withSelfRel());
+    add(Link.of("http://localhost:8080/docs/index.html#resources-index").withRel("profile"));
   }
 }
