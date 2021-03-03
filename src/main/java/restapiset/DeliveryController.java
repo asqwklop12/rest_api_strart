@@ -2,6 +2,7 @@ package restapiset;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 import java.net.URI;
+import restapiset.common.ErrorModel;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
@@ -33,18 +35,22 @@ public class DeliveryController {
     @PostMapping
     public ResponseEntity<?> createDelivery(@RequestBody @Valid DeliveryDto deliveryDto, Errors errors) {
         if (errors.hasErrors()) {
-            return ResponseEntity.badRequest().body(errors);
+            return errorResource(errors);
         }
         deliveryValidator.validate(deliveryDto,errors);
         if(errors.hasErrors()) {
-            return ResponseEntity.badRequest().body(errors);
+            return errorResource(errors);
         }
         Delivery deliver = modelMapper.map(deliveryDto, Delivery.class);
         Delivery newDelivery = deliveryRepository.save(deliver);
         WebMvcLinkBuilder selfRelationBuilder = linkTo(DeliveryController.class).slash(newDelivery.getId());
         URI createUri = selfRelationBuilder.toUri();
-        DeliveryModel model = new DeliveryModel(deliver);
+        EntityModel<Delivery> model = DeliveryModel.modelOf(deliver);
 
         return ResponseEntity.created(createUri).body(model);
+    }
+
+    private ResponseEntity<?> errorResource(Errors errors) {
+        return ResponseEntity.badRequest().body(ErrorModel.modelOf(errors));
     }
 }
