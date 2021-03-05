@@ -2,12 +2,17 @@ package restapiset;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,6 +53,13 @@ public class DeliveryController {
         EntityModel<Delivery> model = DeliveryModel.modelOf(deliver);
 
         return ResponseEntity.created(createUri).body(model);
+    }
+
+    @GetMapping
+    public ResponseEntity<?> deliveryList(Pageable pageable, PagedResourcesAssembler<Delivery> assembler) {
+        Page<Delivery> page = deliveryRepository.findAll(pageable);
+        var pagedModel = assembler.toModel(page, DeliveryModel::modelOf);
+        return ResponseEntity.ok(pagedModel);
     }
 
     private ResponseEntity<?> errorResource(Errors errors) {
