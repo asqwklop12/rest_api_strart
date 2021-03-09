@@ -6,7 +6,6 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.responseH
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.linkWithRel;
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.links;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.payload.PayloadDocumentation.beneathPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
@@ -32,7 +31,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -183,34 +181,75 @@ class DeliveryTest {
                 parameterWithName("size").description("가져오는 데이터 수"),
                 parameterWithName("sort").description("정렬되는 방법")),
             responseFields(fieldWithPath("page.size").description("페이지 크기"),
-            fieldWithPath("page.totalElements").description("전체 갯수"),
-            fieldWithPath("page.totalPages").description("전체 페이지"),
-            fieldWithPath("page.number").description("현재 페이지"),
-            fieldWithPath("_links.first.href").description("첫번째 링크"),
-            fieldWithPath("_links.prev.href").description("이전 링크"),
-            fieldWithPath("_links.self.href").description("현재 링크"),
-            fieldWithPath("_links.last.href").description("마지막 링크"),
-            fieldWithPath("_embedded.deliveryList[].id").description("인덱스"),
-            fieldWithPath("_embedded.deliveryList[].item").description("상품"),
-            fieldWithPath("_embedded.deliveryList[].user").description("판매인"),
-            fieldWithPath("_embedded.deliveryList[].deliveryTime").description("배송일"),
-            fieldWithPath("_embedded.deliveryList[].deliveryEndTime").description("도착 예상일"),
-            fieldWithPath("_embedded.deliveryList[].status").description("배송 상태"),
-            fieldWithPath("_embedded.deliveryList[].itemPrice").description("물품 가격"),
-            fieldWithPath("_embedded.deliveryList[].deliveryCost").description("배달 비용"),
-            fieldWithPath("_embedded.deliveryList[]._links.query-events.href").description("목록으로"),
-            fieldWithPath("_embedded.deliveryList[]._links.update-events.href").description("업데이트하기"),
-            fieldWithPath("_embedded.deliveryList[]._links.self.href").description("현재 이벤트"),
-            fieldWithPath("_embedded.deliveryList[]._links.profile.href").description("현재 작업")
+                fieldWithPath("page.totalElements").description("전체 갯수"),
+                fieldWithPath("page.totalPages").description("전체 페이지"),
+                fieldWithPath("page.number").description("현재 페이지"),
+                fieldWithPath("_links.first.href").description("첫번째 링크"),
+                fieldWithPath("_links.prev.href").description("이전 링크"),
+                fieldWithPath("_links.self.href").description("현재 링크"),
+                fieldWithPath("_links.last.href").description("마지막 링크"),
+                fieldWithPath("_embedded.deliveryList[].id").description("인덱스"),
+                fieldWithPath("_embedded.deliveryList[].item").description("상품"),
+                fieldWithPath("_embedded.deliveryList[].user").description("판매인"),
+                fieldWithPath("_embedded.deliveryList[].deliveryTime").description("배송일"),
+                fieldWithPath("_embedded.deliveryList[].deliveryEndTime").description("도착 예상일"),
+                fieldWithPath("_embedded.deliveryList[].status").description("배송 상태"),
+                fieldWithPath("_embedded.deliveryList[].itemPrice").description("물품 가격"),
+                fieldWithPath("_embedded.deliveryList[].deliveryCost").description("배달 비용"),
+                fieldWithPath("_embedded.deliveryList[]._links.query-events.href")
+                    .description("목록으로"),
+                fieldWithPath("_embedded.deliveryList[]._links.update-events.href")
+                    .description("업데이트하기"),
+                fieldWithPath("_embedded.deliveryList[]._links.self.href").description("현재 이벤트"),
+                fieldWithPath("_embedded.deliveryList[]._links.profile.href").description("현재 작업")
             )
         ));
   }
 
-  private void generateEvent(int index) {
+  @Test
+  public void create_event() throws Exception {
+    Delivery delivery = generateEvent(10);
+    this.mockMvc.perform(get("/api/delivery/{id}", delivery.getId()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("id").exists())
+        .andExpect(jsonPath("_links.self").exists())
+        .andExpect(jsonPath("_links.profile").exists())
+        .andDo(document("get-event",
+            links(linkWithRel("query-events").description("이벤트 생성"),
+                linkWithRel("update-events").description("이벤트 수정"),
+                linkWithRel("self").description("해당 이벤트로 이동"),
+                linkWithRel("profile").description("해당 이벤트로 이동")),
+            responseHeaders(headerWithName(HttpHeaders.CONTENT_TYPE).description("현재 contentType")),
+            responseFields(fieldWithPath("id").description("현재 이벤트 아이디"),
+                fieldWithPath("item").description("상품명"),
+                fieldWithPath("user").description("판매자"),
+                fieldWithPath("deliveryTime").description("출발 시간"),
+                fieldWithPath("deliveryEndTime").description("도착 시간"),
+                fieldWithPath("status").description("베송 상태"),
+                fieldWithPath("itemPrice").description("물품 가격"),
+                fieldWithPath("deliveryCost").description("배송가격"),
+                fieldWithPath("_links.query-events.href").description("이벤트 링크로 가기"),
+                fieldWithPath("_links.update-events.href").description("이벤트 수정 링크 이동"),
+                fieldWithPath("_links.self.href").description("해당 링크로 이동하기"),
+                fieldWithPath("_links.profile.href").description("이벤트 프로파일 링크이동하기"))));
+  }
+
+  @Test
+  public void create_event_bad() throws Exception {
+    this.mockMvc.perform(get("/api/delivery/9999999"))
+        .andDo(print())
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("id").exists())
+        .andExpect(jsonPath("_links.self").exists())
+        .andExpect(jsonPath("_links.profile").exists());
+  }
+
+  private Delivery generateEvent(int index) {
     Delivery delivery = Delivery.builder()
         .item("Delivery" + index)
         .user("klom")
         .build();
-    deliveryRepository.save(delivery);
+    return deliveryRepository.save(delivery);
   }
 }
