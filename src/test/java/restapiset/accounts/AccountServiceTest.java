@@ -43,8 +43,7 @@ class AccountServiceTest {
         UsernameNotFoundException.class,
         () -> {
           String username = "klomlly";
-          UserDetails userDetails = accountService.loadUserByUsername(username);
-          System.out.println(userDetails);
+          accountService.loadUserByUsername(username);
         }
     );
   }
