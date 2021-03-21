@@ -20,7 +20,7 @@ public class Delivery {
     @GeneratedValue
     private int id;
     private String item;
-    private String user;
+    private String username;
     private LocalDateTime deliveryTime;
     private LocalDateTime deliveryEndTime;
     private DeliveryStatus status = DeliveryStatus.READY;

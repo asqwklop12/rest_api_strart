@@ -101,7 +101,7 @@ class DeliveryTest extends BaseControllerTest {
     Delivery delivery = Delivery.builder()
         .id(10)
         .item("book")
-        .user("klom")
+        .username("klom")
         .deliveryTime(LocalDateTime.now())
         .deliveryEndTime(LocalDateTime.now().plusDays(10))
         .status(DeliveryStatus.MOVE)
@@ -322,7 +322,7 @@ class DeliveryTest extends BaseControllerTest {
   private Delivery generateEvent(int index) {
     Delivery delivery = Delivery.builder()
         .item("Delivery" + index)
-        .user("klom")
+        .username("klom")
         .build();
     return deliveryRepository.save(delivery);
   }
